@@ -1,2 +1,2 @@
 Ceci est un test.
-deuxieme ligne
+deuxième ligne
