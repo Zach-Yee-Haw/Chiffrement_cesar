@@ -4,7 +4,7 @@ def strip_accent(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
-def Chiffrage_Cesar():
+def Chiffrage_Cesar(commande):
 
 
     """
@@ -29,67 +29,61 @@ def Chiffrage_Cesar():
     case_haute_liste[:] = case_haute
     case_basse_liste[:] = case_basse
 
-    while True:
+    message_code_liste = []
 
-        message_code_liste = []
+    #Si sa commande est un int ou 'd', on continue sinon c'est pas bien
 
-        #Entrée par l'utilisateur
+    try:
+        commande = int(commande)
+    except ValueError:
+        print("Commande invalide, essayez à nouveau.")
 
-        commande = input("Entrez un chiffre afin de encrypter/décrypter le message, ou entrez \'d\' pour tenter de décoder le message : ")
+    #On vérifie l'entrée de l'utilisateur et si c'est un chiffre, on encrypte/décrypte
 
-        #Si sa commande est un int ou 'd', on continue sinon c'est pas bien
+    if isinstance(commande, int):
 
-        try:
-            commande = int(commande)
-        except ValueError:
-            if commande != 'd': print("Commande invalide, essayez à nouveau.")
+        """
+        On vérifie la position de la lettre dans l'alphabet, puis on lui ajoute la valeur de l'utilisateur.
+        On divise ensuite ce nombre par 26 et on prend le restant afin que ce chiffre corresponde à une lettre
+        dans l'alphabet. On ajoute cette lettre dans la liste du message codé. Si le charactère n'est pas une 
+        lettre, on l'ajoute directement dans la liste.
+        """
 
-        #On vérifie l'entrée de l'utilisateur, si c'est un 'd', on décode et si c'est un chiffre, on encrypte/décrypte
+        i = 0
 
-        if commande == "d":
-            #
-            print("test")
-            #
-        elif isinstance(commande, int):
+        for lettre in message_base_liste:
 
-            """
-            On vérifie la position de la lettre dans l'alphabet, puis on lui ajoute la valeur de l'utilisateur.
-            On divise ensuite ce nombre par 26 et on prend le restant afin que ce chiffre corresponde à une lettre
-            dans l'alphabet. On ajoute cette lettre dans la liste du message codé. Si le charactère n'est pas une 
-            lettre, on l'ajoute directement dans la liste.
-            """
+            if lettre in case_haute_liste:
 
-            i = 0
+                position_lettre = case_haute.find(lettre)
+                position_lettre += commande
+                position_lettre %= nombre_lettres_alphabet
+                message_code_liste.append(case_haute_liste[position_lettre])
 
-            for lettre in message_base_liste:
+            elif lettre in case_basse_liste:
 
-                if lettre in case_haute_liste:
+                position_lettre = case_basse.find(lettre)
+                position_lettre += commande
+                position_lettre %= nombre_lettres_alphabet
+                message_code_liste.append(case_basse_liste[position_lettre])
 
-                    position_lettre = case_haute.find(lettre)
-                    position_lettre += commande
-                    position_lettre %= nombre_lettres_alphabet
-                    message_code_liste.append(case_haute_liste[position_lettre])
+            else:
+                message_code_liste.append(lettre)
 
-                elif lettre in case_basse_liste:
+            i += 1
 
-                    position_lettre = case_basse.find(lettre)
-                    position_lettre += commande
-                    position_lettre %= nombre_lettres_alphabet
-                    message_code_liste.append(case_basse_liste[position_lettre])
+        #On unifie le message codé/décodé
 
-                else:
-                    message_code_liste.append(lettre)
+        message_code = ''.join(message_code_liste)
 
-                i += 1
+        #On montre le message à l'utilisateur
 
-            #On unifie le message codé/décodé
+        return message_code
 
-            message_code = ''.join(message_code_liste)
 
-            #On montre le message à l'utilisateur
+while True:
 
-            print("Voici le message : ", message_code)
-
-        if input("Tapez \'r\' pour recommencer, ou autre chose pour terminer : ") != 'r': break
-
-Chiffrage_Cesar()
+    commande = input('Entrez un nombre pour encrypter/décrypter le message : ')
+    message_code = Chiffrage_Cesar(commande)
+    if message_code != None: print(message_code)
+    if input("Tapez\'r\' pour recomencer ou autre chose pour terminer") != 'r': break
