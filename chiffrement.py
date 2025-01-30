@@ -6,6 +6,7 @@ def strip_accent(s):
 
 def Chiffrage_Cesar():
 
+
     """
     Cette fonction permet à l'utilisateur de prendre un message dans le fichier message_code.txt et de l'encrypter/décrypter
     par le chiffrement de César.
