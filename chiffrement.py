@@ -5,6 +5,7 @@ def strip_accent(s):
                    if unicodedata.category(c) != 'Mn')
 
 
+
 def Chiffrage_Cesar():
 
     """
