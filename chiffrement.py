@@ -22,7 +22,7 @@ while True:
     try:
         commande = int(commande)
     except ValueError:
-        test = 'test'
+        if commande != 'd': print("Commande invalide, essayez à nouveau.")
 
 
     if commande == "d":
@@ -57,8 +57,5 @@ while True:
         message_code = ''.join(message_code_liste)
 
         print("Voici le message : ", message_code)
-
-    else:
-        print("Commande invalide, essayez à nouveau.")
 
     if input("Tapez \'r\' pour recommencer, ou autre chose pour terminer : ") != 'r': break
