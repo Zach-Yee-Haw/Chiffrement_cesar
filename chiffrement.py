@@ -19,8 +19,8 @@ while True:
 
     commande = input("Entrez un chiffre afin de coder/décoder le message, ou entrez \'d\' pour tenter de décoder le message : ")
 
-
-    commande = int(commande)
+    if commande.isdigit():
+        commande = int(commande)
 
 
     if commande == "d":
