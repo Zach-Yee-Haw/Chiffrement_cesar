@@ -1,3 +1,8 @@
+import unicodedata
+
+def strip_accent(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s)
+                   if unicodedata.category(c) != 'Mn')
 
 def Chiffrage_Cesar():
 
@@ -19,7 +24,7 @@ def Chiffrage_Cesar():
     case_haute_liste = []
     case_basse_liste = []
 
-    message_base_liste[:] = message_base
+    message_base_liste[:] = strip_accent(message_base)
     case_haute_liste[:] = case_haute
     case_basse_liste[:] = case_basse
 
