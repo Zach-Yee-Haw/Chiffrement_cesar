@@ -1,6 +1,4 @@
 
-from unidecode import unidecode as udc
-
 nombre_lettres_alphabet = 26
 message_base = open("message_code.txt", "r", encoding='utf-8')
 message_base = message_base.read()
@@ -11,7 +9,7 @@ message_base_liste = []
 case_haute_liste = []
 case_basse_liste = []
 
-message_base_liste[:] = udc(message_base)
+message_base_liste[:] = message_base
 case_haute_liste[:] = case_haute
 case_basse_liste[:] = case_basse
 
@@ -21,7 +19,9 @@ while True:
 
     commande = input("Entrez un chiffre afin de coder/décoder le message, ou entrez \'d\' pour tenter de décoder le message : ")
 
-    test = isinstance(commande, int)
+
+    commande = int(commande)
+
 
     if commande == "d":
         #
