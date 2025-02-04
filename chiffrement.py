@@ -7,7 +7,7 @@ def strip_accent(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
-def Premiers_Mots(texte, nombre_de_mots):
+def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
     """
     Cette fonction sert à prendre une phrase en entrée et sort les premiers mots de cette phrase selon
     le nombre de mots que l'utilisateur voudrait avoir.
@@ -40,10 +40,19 @@ def Premiers_Mots(texte, nombre_de_mots):
     premiers_mots = []
     mots = mots.split(' ')
 
+    #On enlève les mots qui sont trop court
+
+    mots_a_enlever = []
+    for mot in mots:
+        if len(mot) < longueur_min: mots_a_enlever.append(mot)
+
+    for mot in mots_a_enlever:
+        mots.remove(mot)
+
     #On retourne les premiers mots et, s'il y en a moins que ce que l'utilisateur veux, on retourne le tout
 
     if len(mots) <= nombre_de_mots:
-        premier_mots = mots
+        premiers_mots = mots
 
     else:
         premiers_mots = mots[0:nombre_de_mots]
