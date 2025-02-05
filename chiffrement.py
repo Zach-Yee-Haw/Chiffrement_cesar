@@ -1,15 +1,70 @@
 import unicodedata
 
+case_haute = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+case_basse = case_haute.lower()
+
 def strip_accent(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
+
+def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
+    """
+    Cette fonction sert à prendre une phrase en entrée et sort les premiers mots de cette phrase selon
+    le nombre de mots que l'utilisateur voudrait avoir.
+    """
+
+    #On enlève les accents et on met tout en case basse
+
+    texte_simplifie = strip_accent(texte)
+    texte_simplifie = texte_simplifie.lower()
+
+    #On génère des listes de lettres
+
+    texte_liste = []
+    texte_simplifie_liste = []
+    texte_liste[:] = texte_simplifie
+
+    #Si le charactère est une lettre ou une espace, on la conserve, sinon, on le transforme en espace
+
+    for i in range(len(texte_liste)):
+
+        if texte_liste[i] in case_basse or texte_liste[i] == ' ':
+
+            texte_simplifie_liste.append(texte_liste[i])
+        else:
+            texte_simplifie_liste.append(' ')
+
+    #on met tous les mots ensemble, puis on les sépare à l'aide des espaces
+
+    mots = ''.join(texte_simplifie_liste)
+    premiers_mots = []
+    mots = mots.split(' ')
+
+    #On enlève les mots qui sont trop court
+
+    mots_a_enlever = []
+    for mot in mots:
+        if len(mot) < longueur_min: mots_a_enlever.append(mot)
+
+    for mot in mots_a_enlever:
+        mots.remove(mot)
+
+    #On retourne les premiers mots et, s'il y en a moins que ce que l'utilisateur veux, on retourne le tout
+
+    if len(mots) <= nombre_de_mots:
+        premiers_mots = mots
+
+    else:
+        premiers_mots = mots[0:nombre_de_mots]
+
+    return premiers_mots
 
 def Chiffrage_Cesar(commande):
 
 
     """
-    Cette fonction permet à l'utilisateur de prendre un message dans le fichier message_code.txt et de l'encrypter/décrypter
-    par le chiffrement de César.
+    Cette fonction permet à l'utilisateur de prendre un message dans le fichier message_code.txt et de
+    l'encrypter/décrypter par le chiffrement de César.
     """
 
 
@@ -18,8 +73,6 @@ def Chiffrage_Cesar(commande):
     nombre_lettres_alphabet = 26
     message_base = open("message_code.txt", "r", encoding='utf-8')
     message_base = message_base.read()
-    case_haute = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    case_basse = case_haute.lower()
 
     message_base_liste = []
     case_haute_liste = []
@@ -80,10 +133,15 @@ def Chiffrage_Cesar(commande):
 
         return message_code
 
-
 while True:
+
+    """
+    On demande un chiffre à l'utilisateur afin que le message soit encrypté ou décrypté 
+    et on montre le résultat à l'utilisateur
+    """
 
     commande = input('Entrez un nombre pour encrypter/décrypter le message : ')
     message_code = Chiffrage_Cesar(commande)
     if message_code != None: print(message_code)
     if input("Tapez\'r\' pour recomencer ou autre chose pour terminer") != 'r': break
+
