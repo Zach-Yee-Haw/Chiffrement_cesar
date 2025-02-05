@@ -132,6 +132,10 @@ def Chiffrage_Cesar(commande,message_base):
         return message_code
 
 def EstFrancais(texte):
+    """
+        Prend un string et vérifie si le contenu est en francais
+        Retourne 1 si oui, Sinon retourne 0
+    """
     e_count = 0
     for i in range(len(texte)):
         if texte[i] == 'e':
@@ -141,10 +145,15 @@ def EstFrancais(texte):
     return 0
 
 def Decryptage(texte):
+    """
+        Prend un string d'un message encoder et essaie de le decoder
+        Si le message peut etre decoder il renvoie le message ainsi que la clé d'encription
+        Sinon la fonction renvoie 0
+    """
     for i in range(26):
-        Message_Decrypter = Chiffrage_Cesar(i,texte)
-        if(EstFrancais(Message_Decrypter)):
-            return Message_Decrypter, 26-i
+        message_decrypter = Chiffrage_Cesar(i,texte)
+        if EstFrancais(message_decrypter):
+            return message_decrypter, 26-i
     return 0
 
 
