@@ -1,5 +1,6 @@
 import unicodedata
 
+
 case_haute = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 case_basse = case_haute.lower()
 
@@ -59,7 +60,7 @@ def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
 
     return premiers_mots
 
-def Chiffrage_Cesar(commande):
+def Chiffrage_Cesar(commande,message_base):
 
 
     """
@@ -71,9 +72,6 @@ def Chiffrage_Cesar(commande):
     #initialisation de variables
 
     nombre_lettres_alphabet = 26
-    message_base = open("message_code.txt", "r", encoding='utf-8')
-    message_base = message_base.read()
-
     message_base_liste = []
     case_haute_liste = []
     case_basse_liste = []
@@ -133,15 +131,50 @@ def Chiffrage_Cesar(commande):
 
         return message_code
 
-while True:
+def EstFrancais(texte):
+    e_count = 0
+    for i in range(len(texte)):
+        if texte[i] == 'e':
+            e_count += 1
+    if e_count/len(texte) >= 0.1 :
+        return 1
+    return 0
 
-    """
-    On demande un chiffre à l'utilisateur afin que le message soit encrypté ou décrypté 
-    et on montre le résultat à l'utilisateur
-    """
+def Decryptage(texte):
+    for i in range(26):
+        Message_Decrypter = Chiffrage_Cesar(i,texte)
+        if(EstFrancais(Message_Decrypter)):
+            return Message_Decrypter, 26-i
+    return 0
 
-    commande = input('Entrez un nombre pour encrypter/décrypter le message : ')
-    message_code = Chiffrage_Cesar(commande)
-    if message_code != None: print(message_code)
-    if input("Tapez\'r\' pour recomencer ou autre chose pour terminer") != 'r': break
+
+def menu():
+    """
+        Un simple menu pour intéragir avec l'utilisateur,
+        On demande s'il veut encrypter ou decrypter,
+        par la suite, s'il veut écrire son propre texte ou utiliser un fichier texte
+        Enfin, on appelle les fonctions du code qui réponde à la demande.
+        """
+    if input('Voulez-vous encrypter (1) ou decrypter (0) un texte ?') == 1:
+        texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt\n')
+        if texte.endswith(".txt"):
+            file = open(texte, 'r', encoding = 'utf-8')
+            texte = file.readlines()
+            texte = ''.join(texte)
+        commande = input('Entrez un nombre pour encrypter le message : ')
+        message_code = Chiffrage_Cesar(commande,texte)
+        print(message_code)
+    else:
+        texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt')
+        if texte.endswith(".txt"):
+            file = open(texte, 'r', encoding='utf-8')
+            texte = file.readlines()
+            texte = ''.join(texte)
+    message, clef = Decryptage(texte)
+    print(f"La clé de chiffrement est: {clef}\n")
+    print(message)
+
+
+menu()
+
 
