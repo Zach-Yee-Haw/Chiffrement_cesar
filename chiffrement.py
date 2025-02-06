@@ -5,6 +5,7 @@ from unicodedata import category
 
 case_haute = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 case_basse = case_haute.lower()
+nombre_lettres_alphabet = len(case_haute)
 
 def strip_accent(s):
 
@@ -75,7 +76,6 @@ def Chiffrage_Cesar(commande,message_base):
 
     #initialisation de variables
 
-    nombre_lettres_alphabet = 26
     message_base_liste = []
     case_haute_liste = []
     case_basse_liste = []
@@ -138,12 +138,13 @@ def Chiffrage_Cesar(commande,message_base):
 def EstFrancais(texte):
 
     """
-        Prend un string et vérifie si le contenu est en francais
+        Prend un string et vérifie si la moitié du contenu fait partie de notre dictionnaire francais
         Retourne 1 si oui, Sinon retourne 0
     """
 
     mots_valides = 0
     nombre_de_mots = 10
+    seuil_minimum = 0.5
 
     texte_traite = Premiers_Mots(strip_accent(texte).lower(), nombre_de_mots)
     dictionnaire = open('dico.txt', 'r', encoding='utf-8')
@@ -154,7 +155,7 @@ def EstFrancais(texte):
         if mot in dictionnaire:
             mots_valides += 1
 
-    if mots_valides / len(texte_traite) >= 0.5:
+    if mots_valides / len(texte_traite) >= seuil_minimum:
 
         return 1
 
@@ -172,10 +173,10 @@ def Decryptage(texte):
     """
 
 
-    for i in range(26):
+    for i in range(nombre_lettres_alphabet):
         message_decrypter = Chiffrage_Cesar(i,texte)
         if EstFrancais(message_decrypter):
-            return message_decrypter, 26-i
+            return message_decrypter, nombre_lettres_alphabet-i
     return 0
 
 
