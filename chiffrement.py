@@ -155,7 +155,13 @@ def EstFrancais(texte):
         if mot in dictionnaire:
             mots_valides += 1
 
-    if mots_valides / len(texte_traite) >= seuil_minimum:
+    try:
+        ratio_validite = mots_valides / len(texte_traite)
+
+    except:
+        return 0
+
+    if ratio_validite >= seuil_minimum:
 
         return 1
 
@@ -177,7 +183,7 @@ def Decryptage(texte):
         message_decrypter = Chiffrage_Cesar(i,texte)
         if EstFrancais(message_decrypter):
             return message_decrypter, nombre_lettres_alphabet-i
-    return 0
+    return 0, 0
 
 
 def menu():
@@ -190,30 +196,43 @@ def menu():
         Enfin, on appelle les fonctions du code qui réponde à la demande.
         """
 
-
-    if input('Voulez-vous encrypter (1) ou decrypter (0) un texte? : ') == '1':
+    premiere_commande = input('Voulez-vous encrypter (1) ou decrypter (0) un texte? : ')
+    if  premiere_commande == '1':
         texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt : ')
 
         if texte.endswith(".txt"):
-            file = open(texte, 'r', encoding = 'utf-8')
-            texte = file.readlines()
-            texte = ''.join(texte)
+            try:
+                file = open(texte, 'r', encoding = 'utf-8')
+                texte = file.readlines()
+                texte = ''.join(texte)
+            except:
+                print("Fichier introuvable, texte entré assumé comme étant un message.")
 
         commande = input('Entrez un nombre pour encrypter le message : ')
         message_code = Chiffrage_Cesar(commande,texte)
         print(message_code)
 
-    else:
+    elif premiere_commande == "0":
         texte = input('Entrez un texte ou un fichier texte terminant par .txt : ')
 
         if texte.endswith(".txt"):
-            file = open(texte, 'r', encoding='utf-8')
-            texte = file.readlines()
-            texte = ''.join(texte)
+            try:
+                file = open(texte, 'r', encoding='utf-8')
+                texte = file.readlines()
+                texte = ''.join(texte)
+            except:
+                print("Fichier introuvable, texte entré assumé comme étant un message.")
+
 
         message, clef = Decryptage(texte)
-        print(f"La clé de chiffrement est: {clef}\n")
-        print(message)
+        if message != 0:
+            print(f"La clé de chiffrement est: {clef}\n")
+            print(message)
+        else:
+            print("Message invalide.")
+
+    else:
+        print("Commande invalide.")
 
 menu()
 
