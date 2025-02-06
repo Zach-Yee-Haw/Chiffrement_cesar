@@ -91,7 +91,7 @@ def Chiffrage_Cesar(commande,message_base):
     try:
         commande = int(commande)
     except ValueError:
-        print("Commande invalide, essayez à nouveau.")
+        print("Commande invalide.")
 
     #On vérifie l'entrée de l'utilisateur et si c'est un chiffre, on encrypte/décrypte
 
@@ -144,7 +144,7 @@ def EstFrancais(texte):
 
     mots_valides = 0
     nombre_de_mots = 10
-    seuil_minimum = 0.5
+    seuil_minimum = 0.7
 
     texte_traite = Premiers_Mots(strip_accent(texte).lower(), nombre_de_mots)
     dictionnaire = open('dico.txt', 'r', encoding='utf-8')
@@ -210,7 +210,7 @@ def menu():
 
         commande = input('Entrez un nombre pour encrypter le message : ')
         message_code = Chiffrage_Cesar(commande,texte)
-        print(message_code)
+        if message_code != None: print(message_code)
 
     elif premiere_commande == "0":
         texte = input('Entrez un texte ou un fichier texte terminant par .txt : ')
