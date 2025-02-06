@@ -1,14 +1,19 @@
 import unicodedata
 
+#On définit l'alphabet majuscule et minuscule
 
 case_haute = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 case_basse = case_haute.lower()
 
 def strip_accent(s):
+
+    #Cette fonction sert à remplacer les caractères spéciaux pas des caractères ASCII
+
     return ''.join(c for c in unicodedata.normalize('NFD', s)
                    if unicodedata.category(c) != 'Mn')
 
 def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
+
     """
     Cette fonction sert à prendre une phrase en entrée et sort les premiers mots de cette phrase selon
     le nombre de mots que l'utilisateur voudrait avoir.
@@ -19,10 +24,12 @@ def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
     texte_simplifie = strip_accent(texte)
     texte_simplifie = texte_simplifie.lower()
 
-    #On génère des listes de lettres
+    #On génère les listes
 
     texte_liste = []
     texte_simplifie_liste = []
+    premiers_mots = []
+    mots_a_enlever = []
     texte_liste[:] = texte_simplifie
 
     #Si le charactère est une lettre ou une espace, on la conserve, sinon, on le transforme en espace
@@ -38,19 +45,17 @@ def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
     #on met tous les mots ensemble, puis on les sépare à l'aide des espaces
 
     mots = ''.join(texte_simplifie_liste)
-    premiers_mots = []
     mots = mots.split(' ')
 
     #On enlève les mots qui sont trop court
 
-    mots_a_enlever = []
     for mot in mots:
         if len(mot) < longueur_min: mots_a_enlever.append(mot)
 
     for mot in mots_a_enlever:
         mots.remove(mot)
 
-    #On retourne les premiers mots et, s'il y en a moins que ce que l'utilisateur veux, on retourne le tout
+    #On retourne les premiers mots et, s'il y en a moins que ce que l'utilisateur veux, on retourne tout
 
     if len(mots) <= nombre_de_mots:
         premiers_mots = mots
@@ -62,12 +67,10 @@ def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
 
 def Chiffrage_Cesar(commande,message_base):
 
-
     """
     Cette fonction permet à l'utilisateur de prendre un message dans le fichier message_code.txt et de
     l'encrypter/décrypter par le chiffrement de César.
     """
-
 
     #initialisation de variables
 
@@ -82,7 +85,7 @@ def Chiffrage_Cesar(commande,message_base):
 
     message_code_liste = []
 
-    #Si sa commande est un int ou 'd', on continue sinon c'est pas bien
+    #Si sa commande est un int on continue, sinon la commande est rejetée
 
     try:
         commande = int(commande)
@@ -127,29 +130,47 @@ def Chiffrage_Cesar(commande,message_base):
 
         message_code = ''.join(message_code_liste)
 
-        #On montre le message à l'utilisateur
+        #On retourne le message
 
         return message_code
 
 def EstFrancais(texte):
+
     """
         Prend un string et vérifie si le contenu est en francais
         Retourne 1 si oui, Sinon retourne 0
     """
-    e_count = 0
-    for i in range(len(texte)):
-        if texte[i] == 'e':
-            e_count += 1
-    if e_count/len(texte) >= 0.1 :
+
+    mots_valides = 0
+    nombre_de_mots = 10
+
+    texte_traite = Premiers_Mots(strip_accent(texte).lower(), nombre_de_mots)
+    dictionnaire = open('dico.txt', 'r', encoding='utf-8')
+    dictionnaire = strip_accent(dictionnaire.read()).lower()
+
+    for mot in texte_traite:
+
+        if mot in dictionnaire:
+            mots_valides += 1
+
+    if mots_valides / len(texte_traite) >= 0.5:
+
         return 1
-    return 0
+
+    else:
+
+        return 0
 
 def Decryptage(texte):
+
+
     """
         Prend un string d'un message encoder et essaie de le decoder
         Si le message peut etre decoder il renvoie le message ainsi que la clé d'encription
         Sinon la fonction renvoie 0
     """
+
+
     for i in range(26):
         message_decrypter = Chiffrage_Cesar(i,texte)
         if EstFrancais(message_decrypter):
@@ -158,31 +179,39 @@ def Decryptage(texte):
 
 
 def menu():
+
+
     """
         Un simple menu pour intéragir avec l'utilisateur,
         On demande s'il veut encrypter ou decrypter,
         par la suite, s'il veut écrire son propre texte ou utiliser un fichier texte
         Enfin, on appelle les fonctions du code qui réponde à la demande.
         """
-    if input('Voulez-vous encrypter (1) ou decrypter (0) un texte ?') == 1:
-        texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt\n')
+
+
+    if input('Voulez-vous encrypter (1) ou decrypter (0) un texte? : ') == '1':
+        texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt : ')
+
         if texte.endswith(".txt"):
             file = open(texte, 'r', encoding = 'utf-8')
             texte = file.readlines()
             texte = ''.join(texte)
+
         commande = input('Entrez un nombre pour encrypter le message : ')
         message_code = Chiffrage_Cesar(commande,texte)
         print(message_code)
+
     else:
-        texte = input('Veuillez entrer un texte ou un fichier texte terminant par .txt')
+        texte = input('Entrez un texte ou un fichier texte terminant par .txt : ')
+
         if texte.endswith(".txt"):
             file = open(texte, 'r', encoding='utf-8')
             texte = file.readlines()
             texte = ''.join(texte)
-    message, clef = Decryptage(texte)
-    print(f"La clé de chiffrement est: {clef}\n")
-    print(message)
 
+        message, clef = Decryptage(texte)
+        print(f"La clé de chiffrement est: {clef}\n")
+        print(message)
 
 menu()
 
