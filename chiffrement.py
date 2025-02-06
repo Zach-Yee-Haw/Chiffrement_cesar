@@ -1,4 +1,5 @@
-import unicodedata
+from unicodedata import normalize
+from unicodedata import category
 
 #On définit l'alphabet majuscule et minuscule
 
@@ -9,8 +10,8 @@ def strip_accent(s):
 
     #Cette fonction sert à remplacer les caractères spéciaux pas des caractères ASCII
 
-    return ''.join(c for c in unicodedata.normalize('NFD', s)
-                   if unicodedata.category(c) != 'Mn')
+    return ''.join(c for c in normalize('NFD', s)
+                   if category(c) != 'Mn')
 
 def Premiers_Mots(texte, nombre_de_mots, longueur_min = 3):
 
